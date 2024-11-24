@@ -6,6 +6,9 @@ const Admin = require('../models/Admin');
 const router = express.Router();
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const mongoose = require('mongoose');
+
+
 
 // Create a profile
 router.post('/add-profile', upload.single('image'), async (req, res) => {
@@ -90,7 +93,7 @@ router.post('/admin/login', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
+    console.log(id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid ID format' });
     }

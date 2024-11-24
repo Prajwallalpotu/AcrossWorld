@@ -15,7 +15,7 @@ const ProfileCard = ({ profile }) => {
         <CardMedia
           component="img"
           height="100"
-          image={`http://localhost:5001/api/profiles/${profile.image}`}
+          image={`http://localhost:5001/${profile.image}`}
           sx={{ borderRadius: '50%', width: 100, margin: '0 auto',backgroundColor:'lightgray',fontSize:12}}
         />
         <CardContent>

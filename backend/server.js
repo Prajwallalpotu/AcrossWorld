@@ -26,6 +26,8 @@ mongoose
 // Routes
 app.use('/api/profiles', profileRoutes); // Base route for profiles and admin-related endpoints
 
+app.use("/uploads", express.static(__dirname + "/uploads"));
+
 // Default Route
 app.get('/', (req, res) => {
   res.send('Welcome to the AcrossWorld Backend!');
