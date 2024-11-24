@@ -22,7 +22,7 @@ const EditUser = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/api/users/${userId}`);
+        const response = await axios.get(`http://localhost:5001/api/profiles/${userId}`);
         const userData = response.data;
   
         console.log('Fetched User Data:', userData);

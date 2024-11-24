@@ -5,11 +5,12 @@ import ProfileView from './pages/ProfileView';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import AddUser from './pages/AddUser';
 import EditUser from './pages/EditUser';
 import ProfileDetails from './components/ProfileDetails';
 import MapPage from './pages/MapPage';
 import {mockProfiles} from './data/profileData';
+import CreateProfile from './pages/CreateProfile';
+import AddAdmin from './pages/AddAdmin';
 
 function App() {
   return (
@@ -28,8 +29,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin/add" element={<AddUser />} />
+        <Route path="/admin/add" element={<AddAdmin />} />
         <Route path="/admin/edit/:id" element={<EditUser />} />
+        <Route path='/create_card' element={<CreateProfile/>} />
 
 
       </Routes>

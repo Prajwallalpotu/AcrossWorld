@@ -1,20 +1,34 @@
 // src/pages/AdminDashboard.js
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Box, TextField, Button, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { mockProfiles } from '../data/profileData';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios';
 
 
 const AdminDashboard = () => {
-  const [profiles, setProfiles] = useState(mockProfiles);
+  const [profiles, setProfiles] = useState([]);
   const [search, setSearch] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const navigate = useNavigate();
 
   const handleSearch = (e) => setSearch(e.target.value);
   const handleFilter = (e) => setLocationFilter(e.target.value);
+
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try{
+        const response = await axios.get('http://localhost:5001/api/profiles');
+        setProfiles(response.data);
+      }catch(err){
+        console.err('Profile fetching Error :' , err);
+      }
+    };
+    fetchProfiles();
+  },[]);
+
 
   const filteredProfiles = profiles.filter(profile =>
     profile.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -23,8 +37,20 @@ const AdminDashboard = () => {
 
   const handleAddUser = () => navigate('/admin/add');
   const handleEditUser = (id) => navigate(`/admin/edit/${id}`);
-  const handleDeleteUser = (id) => setProfiles(profiles.filter(profile => profile.id !== id));
 
+
+  const handleDeleteUser = async (id) => {
+    console.log('Deleting user with ID:', id); // Debugging
+    try {
+      await axios.delete(`http://localhost:5001/api/profiles/${id}`);
+      setProfiles(profiles.filter(profile => profile._id !== id));
+      alert('User deleted successfully');
+    } catch (err) {
+      console.error('Error deleting user:', err.response?.data || err.message);
+      alert('Failed to delete user. Please try again.');
+    }
+  };
+  
   return (
     <Layout>
       <Box sx={{ padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -46,7 +72,7 @@ const AdminDashboard = () => {
             sx={{ flexGrow: 1, minWidth: 200 }}
           >
             <MenuItem value="">All Locations</MenuItem>
-            {[...new Set(mockProfiles.map(profile => profile.city))].map(city => (
+            {[...new Set(profiles.map(profile => profile.city))].map(city => (
               <MenuItem key={city} value={city}>{city}</MenuItem>
             ))}
           </Select>
@@ -63,12 +89,12 @@ const AdminDashboard = () => {
             </TableHead>
             <TableBody>
               {filteredProfiles.map(profile => (
-                <TableRow key={profile.id}>
+                <TableRow key={profile._id}>
                   <TableCell align="left" sx={{ display: 'flex', gap: 1 }}>
-                    <Button variant="outlined" color="primary" onClick={() => handleEditUser(profile.id)} size="small">
+                    <Button variant="outlined" color="primary" onClick={() => handleEditUser(profile._id)} size="small">
                       Edit
                     </Button>
-                    <Button variant="outlined" color="error" onClick={() => handleDeleteUser(profile.id)} size="small">
+                    <Button variant="outlined" color="error" onClick={() => handleDeleteUser(profile._id)} size="small">
                       Delete
                     </Button>
                   </TableCell>

@@ -2,45 +2,58 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import { mockProfiles } from '../data/profileData';
 import Layout from '../components/Layout';
+import axios from 'axios';
 
 const MapPage = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [profiles,setProfiles] = useState([]);
 
   useEffect(() => {
-    const geocodeAddresses = async () => {
-      const results = await Promise.all(
-        mockProfiles.map(async (profile) => {
-          try {
-            const response = await fetch(
-              `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(profile.address)}&format=json`
-            );
-            const data = await response.json();
-            if (data.length > 0) {
-              return {
-                id: profile.id,
-                name: profile.name,
-                address: profile.address,
-                coordinates: [parseFloat(data[0].lat), parseFloat(data[0].lon)], // Geocoded location
-              };
-            } else {
-              console.warn(`No geocoding results for: ${profile.address}`);
-              return null; // No valid geocoding results
+    const fetchProfilesAndGeocode = async () => {
+      try {
+        const response = await axios.get('http://localhost:5001/api/profiles');
+        const profilesData = response.data;
+        setProfiles(profilesData);
+  
+        const results = await Promise.all(
+          profilesData.map(async (profile) => {
+            if (!profile.address) return null; // Skip if address is empty
+            try {
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(profile.address)}&format=json`
+              );
+              const data = await response.json();
+              if (data.length > 0) {
+                return {
+                  id: profile._id,
+                  name: profile.name,
+                  address: profile.address,
+                  coordinates: [parseFloat(data[0].lat), parseFloat(data[0].lon)],
+                };
+              } else {
+                console.warn(`No geocoding results for: ${profile.address}`);
+                return null;
+              }
+            } catch (error) {
+              console.error(`Error geocoding ${profile.address}`, error);
+              return null;
             }
-          } catch (error) {
-            console.error(`Error geocoding ${profile.address}`, error);
-            return null;
-          }
-        })
-      );
-
-      const validLocations = results.filter((location) => location !== null);
-      setLocations(validLocations);
-      setLoading(false);
+          })
+        );
+  
+        const validLocations = results.filter((location) => location !== null);
+        setLocations(validLocations);
+      } catch (error) {
+        console.error('Error fetching Profiles: ', error);
+      } finally {
+        setLoading(false);
+      }
     };
-
-    geocodeAddresses();
+  
+    fetchProfilesAndGeocode();
   }, []);
+  
 
   return (
     <Layout>

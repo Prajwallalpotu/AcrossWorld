@@ -1,20 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Box } from '@mui/material';
+import axios from 'axios';
 import Layout from '../components/Layout';
 
 const AdminLogin = () => {
   const [adminId, setAdminId] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Hardcoded admin credentials (for simplicity)
-    if (adminId === 'admin' && password === 'password123') {
-      localStorage.setItem('isAdmin', 'true');
-      navigate('/admin/dashboard'); // Redirect to Admin Dashboard
-    } else {
-      alert('Invalid credentials!');
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5001/api/profiles/admin/login', {
+        adminId,
+        password,
+      });      
+  
+      if (response.data.success) {
+        // Store the authentication token in localStorage
+        localStorage.setItem('isAdmin', 'true');
+        localStorage.setItem('authToken', response.data.token);
+  
+        // Redirect to the admin dashboard
+        navigate('/admin/dashboard');
+      } else {
+        setError('Invalid credentials!');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.error || 'Something went wrong');
     }
   };
 
@@ -33,7 +48,7 @@ const AdminLogin = () => {
           maxWidth: 400,
           margin: '0 auto',
           boxShadow: '0px 4px 10px rgba(0,0,0,0.3)',
-          mt:20
+          mt: 20,
         }}
       >
         <Typography variant="h4" sx={{ marginBottom: 3 }}>
@@ -48,21 +63,21 @@ const AdminLogin = () => {
             onChange={(e) => setAdminId(e.target.value)}
             margin="normal"
             InputLabelProps={{
-              style: { color: 'white'}, 
+              style: { color: 'white' },
             }}
             InputProps={{
-              style: { color: 'white'}, 
+              style: { color: 'white' },
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'white', // Default border color
+                  borderColor: 'white',
                 },
                 '&:hover fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.7)', // Border color on hover
+                  borderColor: 'rgba(255, 255, 255, 0.7)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.7)', // Border color when focused
+                  borderColor: 'rgba(255, 255, 255, 0.7)',
                 },
               },
             }}
@@ -76,35 +91,34 @@ const AdminLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             InputLabelProps={{
-              style: { color: 'white' }, // Label color
+              style: { color: 'white' },
             }}
             InputProps={{
-              style: { color: 'white' }, // Text color
+              style: { color: 'white' },
             }}
             sx={{
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'white', // Default border color
+                  borderColor: 'white',
                 },
                 '&:hover fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.7)', // Border color on hover
+                  borderColor: 'rgba(255, 255, 255, 0.7)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(255, 255, 255, 0.7)', // Border color when focused
+                  borderColor: 'rgba(255, 255, 255, 0.7)',
                 },
               },
             }}
           />
+          {error && <Typography sx={{ color: 'red', marginBottom: 2 }}>{error}</Typography>}
           <Button
             variant="contained"
             fullWidth
             onClick={handleLogin}
-            color='primary'
+            color="primary"
             sx={{
               marginTop: 2,
               color: 'white',
-              '&:hover': {
-              },
               padding: 1,
               fontSize: '16px',
             }}
@@ -112,7 +126,6 @@ const AdminLogin = () => {
             Login
           </Button>
         </Box>
-        
       </Box>
     </Layout>
   );

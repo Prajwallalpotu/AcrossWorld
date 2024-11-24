@@ -11,11 +11,11 @@ const ProfileCard = ({ profile }) => {
 
   return (
     <>
-      <Card sx={{ maxWidth: 345, borderRadius: 3, boxShadow: 3, textAlign: 'center',padding:1 }}>
+      <Card sx={{ maxWidth: 345, borderRadius: 3, boxShadow: 3, textAlign: 'center',padding:1,pt:2 }}>
         <CardMedia
           component="img"
           height="100"
-          image={profile.photo}
+          image={`http://localhost:5001/api/profiles/${profile.image}`}
           sx={{ borderRadius: '50%', width: 100, margin: '0 auto',backgroundColor:'lightgray',fontSize:12}}
         />
         <CardContent>
