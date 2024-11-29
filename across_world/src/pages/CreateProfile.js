@@ -133,7 +133,7 @@ const CreateProfile = () => {
           maxWidth: 450,
           margin: '0 auto',
           boxShadow: '0px 4px 10px rgba(0,0,0,0.3)',
-          mt: 15,
+          mt: 10,
           mb: 10,
         }}
       >

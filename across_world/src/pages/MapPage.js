@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import tt from '@tomtom-international/web-sdk-maps';
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
 import axios from 'axios';
+import Layout from '../components/Layout';
 
 const MapPage = () => {
   const OPEN_CAGE_API_KEY = '9c10db3b5c3d4e82aedffe25e0be074a';  // OpenCage API Key
@@ -124,17 +125,17 @@ const MapPage = () => {
   }, []); // Empty dependency array ensures this effect runs only once
 
   return (
-    <div>
+    <Layout>
       {loading && <p>Loading profiles and geocodes...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <div
         id="map"
         style={{
-          height: '100vh',
-          width: '100%',
+          height: '80vh',
+          width: '90%',
         }}
       />
-    </div>
+    </Layout>
   );
 };
 
