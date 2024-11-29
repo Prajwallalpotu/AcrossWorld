@@ -12,3 +12,14 @@ code {
     monospace;
 }
 
+#map {
+  height: 80vh;
+  width: 80%;
+  margin: 30px auto;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
