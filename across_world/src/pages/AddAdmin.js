@@ -11,7 +11,7 @@ const AddAdmin = () => {
 
   const handleAddAdmin = async () => {
     try {
-      const response = await axios.post('http://localhost:5001/api/profiles/add-admin', {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_LINK}/api/profiles/add-admin`, {
         adminId: newAdminId,
         password: newAdminPassword,
       });

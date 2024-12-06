@@ -20,7 +20,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try{
-        const response = await axios.get('http://localhost:5001/api/profiles');
+        const response = await axios.get(`${process.env.REACT_APP_BASE_LINK}/api/profiles`);
         setProfiles(response.data);
       }catch(err){
         console.err('Profile fetching Error :' , err);
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
   const handleDeleteUser = async (id) => {
     console.log('Deleting user with ID:', id); // Debugging
     try {
-      await axios.delete(`http://localhost:5001/api/profiles/${id}`);
+      await axios.delete(`${process.env.REACT_APP_BASE_LINK}/api/profiles/${id}`);
       setProfiles(profiles.filter(profile => profile._id !== id));
       alert('User deleted successfully');
     } catch (err) {
