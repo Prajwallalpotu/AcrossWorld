@@ -66,7 +66,7 @@ const CreateProfile = () => {
     }
 
     axios
-    .post('http://localhost:5001/api/profiles/add-profile', formDataToSend)
+    .post(`${process.env.REACT_APP_BASE_LINK}/api/profiles/add-profile`, formDataToSend)
     .then((response) => {
       setSuccessMessage('Profile created successfully!');
       setErrorMessage('');

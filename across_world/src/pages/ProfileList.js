@@ -17,7 +17,7 @@ const ProfileList = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/profiles');
+        const response = await axios.get(`${process.env.REACT_APP_BASE_LINK}/api/profiles`);
         setProfiles(response.data); // Set profiles fetched from the database
       } catch (err) {
         console.error('Error fetching profiles:', err);

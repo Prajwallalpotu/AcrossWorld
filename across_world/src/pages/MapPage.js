@@ -5,7 +5,9 @@ import axios from 'axios';
 import Layout from '../components/Layout';
 
 const MapPage = () => {
-  const OPEN_CAGE_API_KEY = '9c10db3b5c3d4e82aedffe25e0be074a';  // OpenCage API Key
+  const OPEN_CAGE_API_KEY = process.env.REACT_APP_OPEN_CAGE_API_KEY;  // OpenCage API Key
+  const TOMTOM_API_KEY = process.env.REACT_APP_TOMTOM_API_KEY;  // OpenCage API Key
+  
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,7 +46,7 @@ const MapPage = () => {
         }
 
         // Fetch profiles and geocode addresses
-        const response = await axios.get('http://localhost:5001/api/profiles');
+        const response = await axios.get(`${process.env.REACT_APP_BASE_LINK}/api/profiles`);
         const profiles = response.data;
         console.log('Fetched profiles:', profiles);  // Logs profiles data
         setProfiles(profiles);  // Storing profiles in state
@@ -55,7 +57,7 @@ const MapPage = () => {
 
         // Initialize the map first
         map = tt.map({
-          key: 'JSbFlp0CZ73YHRcPS0tWupjg3tnrKmD7', // Your TomTom API Key for Map
+          key: TOMTOM_API_KEY, // Your TomTom API Key for Map
           container: 'map',
           center: [77.1025, 28.7041], // Default to New Delhi [lng, lat]
           zoom: 5, // Zoom level for city view
